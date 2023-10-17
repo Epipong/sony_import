@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Help
+Help() {
+    echo "iem <command>
+
+Usage:
+
+iem -s <foo>    set the source path
+iem -t <foo>    set the target path
+iem -h          display usage info for all commands
+"
+}
+
+# set default values
+SOURCE_PATH=/storage/0000-0000
+TARGET_PATH=~/storage/pictures/sony
+
+while getopts ":hst:" option; do
+    case $option in
+        s) # source path
+            SOURCE_PATH=$OPTARG;;
+        t) # target path
+            TARGET_PATH=$OPTARG;;
+        h) # display Help
+            Help
+            exit;;
+        \?) # Invalid option
+            echo "unknown command: \"$OPTARG\"
+
+To see a list of supported iem commands, run:
+  iem -h"
+            exit;;
+    esac
+done
+
+import_files() {
+    DIR_PATH=$1
+    EXT=$2
+
+    for filename in $(ls $SOURCE_PATH/$DIR_PATH/*/*.$EXT); do
+        created=$(date -r $filename "+%Y-%m-%d")
+
+        # check if date directory exist
+        if [ ! -d $TARGET_PATH/$created/$EXT ]; then
+            mkdir -p $TARGET_PATH/$created/$EXT
+            echo "$TARGET_PATH/$created/$EXT directory has been created"
+        fi
+
+        file=(${filename//\// })
+
+        # check if file exist and copy
+        if [ ! -f $TARGET_PATH/$created/$EXT/${file[4]} ]; then
+            cp -p $filename $TARGET_PATH/$created/$EXT/${file[4]}
+            echo "$TARGET_PATH/$created/$EXT/${file[4]} file has been created"
+        fi
+    done
+}
+
+import_files DCIM JPG
+import_files DCIM ARW
+import_files PRIVATE/M4ROOT MP4
+
