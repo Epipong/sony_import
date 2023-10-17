@@ -16,7 +16,7 @@ iem -h          display usage info for all commands
 SOURCE_PATH=/storage/0000-0000
 TARGET_PATH=~/storage/pictures/sony
 
-while getopts ":hst:" option; do
+while getopts :s:t:h: option; do
     case $option in
         s) # source path
             SOURCE_PATH=$OPTARG;;
@@ -24,7 +24,8 @@ while getopts ":hst:" option; do
             TARGET_PATH=$OPTARG;;
         h) # display Help
             Help
-            exit;;
+            exit
+            ;;
         \?) # Invalid option
             echo "unknown command: \"$OPTARG\"
 
@@ -34,17 +35,25 @@ To see a list of supported iem commands, run:
     esac
 done
 
+echo "SOURCE: $SOURCE_PATH"
+echo "TARGET: $TARGET_PATH"
+
 import_files() {
     DIR_PATH=$1
     EXT=$2
 
-    for filename in $(ls $SOURCE_PATH/$DIR_PATH/*/*.$EXT); do
+    files=$(ls $SOURCE_PATH/$DIR_PATH/*/*.$EXT)
+    i=1
+    max=$(echo $files | wc -w)
+
+    maxl=$(($(echo $max | wc -c)-1))
+    for filename in $files; do
         created=$(date -r $filename "+%Y-%m-%d")
 
         # check if date directory exist
         if [ ! -d $TARGET_PATH/$created/$EXT ]; then
             mkdir -p $TARGET_PATH/$created/$EXT
-            echo "$TARGET_PATH/$created/$EXT directory has been created"
+            printf "\e[36m$TARGET_PATH/$created/$EXT\e[0m directory has been created\n"
         fi
 
         file=(${filename//\// })
@@ -52,8 +61,9 @@ import_files() {
         # check if file exist and copy
         if [ ! -f $TARGET_PATH/$created/$EXT/${file[4]} ]; then
             cp -p $filename $TARGET_PATH/$created/$EXT/${file[4]}
-            echo "$TARGET_PATH/$created/$EXT/${file[4]} file has been created"
+            printf "[%0${maxl}d/$max] \e[32m${file[4]}\e[0m has been created\n" $i
         fi
+        i=$((i+1))
     done
 }
 
