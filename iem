@@ -24,8 +24,7 @@ while getopts :s:t:h: option; do
             TARGET_PATH=$OPTARG;;
         h) # display Help
             Help
-            exit
-            ;;
+            exit;;
         \?) # Invalid option
             echo "unknown command: \"$OPTARG\"
 
