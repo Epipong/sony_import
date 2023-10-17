@@ -34,12 +34,13 @@ To see a list of supported iem commands, run:
     esac
 done
 
-echo "SOURCE: $SOURCE_PATH"
-echo "TARGET: $TARGET_PATH"
-
 import_files() {
     DIR_PATH=$1
     EXT=$2
+    nfile=4
+    if [ "$2" == "MP4" ]; then
+        nfile=5
+    fi
 
     files=$(ls $SOURCE_PATH/$DIR_PATH/*/*.$EXT)
     i=1
@@ -58,9 +59,9 @@ import_files() {
         file=(${filename//\// })
 
         # check if file exist and copy
-        if [ ! -f $TARGET_PATH/$created/$EXT/${file[4]} ]; then
-            cp -p $filename $TARGET_PATH/$created/$EXT/${file[4]}
-            printf "[%0${maxl}d/$max] \e[32m${file[4]}\e[0m has been created\n" $i
+        if [ ! -f $TARGET_PATH/$created/$EXT/${file[$nfile]} ]; then
+            cp -p $filename $TARGET_PATH/$created/$EXT/${file[$nfile]}
+            printf "[%0${maxl}d/$max] \e[32m${file[$nfile]}\e[0m has been created\n" $i
         fi
         i=$((i+1))
     done
