@@ -34,19 +34,26 @@ To see a list of supported iem commands, run:
     esac
 done
 
+pics=0
+vids=0
+
 import_files() {
     DIR_PATH=$1
     EXT=$2
     nfile=4
+    files=$(ls $SOURCE_PATH/$DIR_PATH/*/*.$EXT)
+    max=$(echo $files | wc -w)
+    maxl=$(($(echo $max | wc -c)-1))
+
     if [ "$2" == "MP4" ]; then
+        vids=$max
         nfile=5
+    elif [ "$2" == "JPG" ]; then
+        pics=$max
     fi
 
-    files=$(ls $SOURCE_PATH/$DIR_PATH/*/*.$EXT)
     i=1
-    max=$(echo $files | wc -w)
 
-    maxl=$(($(echo $max | wc -c)-1))
     for filename in $files; do
         created=$(date -r $filename "+%Y-%m-%d")
 
@@ -71,3 +78,6 @@ import_files DCIM JPG
 import_files DCIM ARW
 import_files PRIVATE/M4ROOT MP4
 
+echo
+printf "images imported: $pics\n"
+printf "videos imported: $vids\n"
