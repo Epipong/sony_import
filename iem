@@ -75,15 +75,15 @@ import_files() {
 }
 
 SECONDS=0
-echo "start: \e[33m$(date +"%T")\e[0m"
+printf "start: \e[33m$(date +"%T")\e[0m"
 
 import_files DCIM JPG
 import_files DCIM ARW
 import_files PRIVATE/M4ROOT MP4
 
 duration=$SECONDS
-echo "end: \e[33m$(date +"%T")\e[0m"
-echo "$((duration / 60)) minutes and $((duration % 60)) seconds elapsed."
+printf "end: \e[33m$(date +"%T")\e[0m"
+printf "\e[33m$((duration / 60))\e[0m minutes and \e[33m$((duration % 60))\e[0m seconds elapsed."
 
 echo
 printf "images imported: $pics\n"
