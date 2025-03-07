@@ -12,9 +12,12 @@ iem -h          display usage info for all commands
 "
 }
 
-# set default values
-SOURCE_PATH=/storage/0000-0000
-TARGET_PATH=~/storage/pictures/sony
+if [ -f ".env" ]; then
+    source .env
+else
+    echo ".env not found!"
+    exit 0
+fi
 
 while getopts :s:t:h: option; do
     case $option in
@@ -55,7 +58,7 @@ import_files() {
     i=1
 
     for filename in $files; do
-        created=$(date -r $filename "+%Y-%m-%d")
+        created=$(exiftool -d "%Y-%m-%d" -CreateDate -s3 "$filename")
 
         # check if date directory exist
         if [ ! -d $TARGET_PATH/$created/$EXT ]; then
@@ -77,9 +80,9 @@ import_files() {
 SECONDS=0
 printf "start: \e[33m$(date +"%T")\e[0m\n"
 
-import_files DCIM JPG
+# import_files DCIM JPG
 import_files DCIM ARW
-import_files PRIVATE/M4ROOT MP4
+# import_files PRIVATE/M4ROOT MP4
 
 duration=$SECONDS
 printf "end: \e[33m$(date +"%T")\e[0m\n"
