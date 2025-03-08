@@ -57,8 +57,8 @@ import_files() {
 
     i=1
 
-    for filename in $files; do
-        created=$(exiftool -d "%Y-%m-%d" -CreateDate -s3 "$filename")
+    for file_path in $files; do
+        created=$(exiftool -d "%Y-%m-%d" -CreateDate -s3 "$file_path")
 
         # check if date directory exist
         if [ ! -d $TARGET_PATH/$created/$EXT ]; then
@@ -66,12 +66,14 @@ import_files() {
             printf "\e[36m$TARGET_PATH/$created/$EXT\e[0m directory has been created\n"
         fi
 
-        file=(${filename//\// })
+        file=(${filepath//\// })
+        filename=$(basename "$file_path")
+        new_file_path=$TARGET_PATH/$created/$EXT/$filename
 
         # check if file exist and copy
-        if [ ! -f $TARGET_PATH/$created/$EXT/${file[$nfile]} ]; then
-            cp -p $filename $TARGET_PATH/$created/$EXT/${file[$nfile]}
-            printf "[%0${maxl}d/$max] \e[32m${file[$nfile]}\e[0m has been created\n" $i
+        if [ ! -f $new_file_path ]; then
+            cp -p $file_path $new_file_path
+            printf "[%0${maxl}d/$max] \e[32m$filename\e[0m has been created\n" $i
         fi
         i=$((i+1))
     done

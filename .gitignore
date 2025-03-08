@@ -1,2 +1,4 @@
 *.swp
 tests/target/*
+
+.env
