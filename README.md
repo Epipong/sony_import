@@ -23,7 +23,10 @@ i.e.
         └── C0001.MP4
 ```
 
-# Usage
+# 📋Requirements
+- Install **exiftool**
+
+# 🚀Usage
 iem -s /root/path/to/sdcard -t /path/to/dest/folder
 
 example for WSL
