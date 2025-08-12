@@ -12,12 +12,12 @@ iem -h          display usage info for all commands
 "
 }
 
-if [ -f ".env" ]; then
-    source .env
-else
-    echo ".env not found!"
-    exit 0
-fi
+#if [ -f ".env" ]; then
+#    source .env
+#else
+#    echo ".env not found!"
+#    exit 0
+#fi
 
 while getopts :s:t:h: option; do
     case $option in
